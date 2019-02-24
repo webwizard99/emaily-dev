@@ -1,5 +1,6 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const FacebookStrategy = require('passport-facebook').Strategy;
 const mongoose = require('mongoose');
 const keys = require('../config/keys');
 
@@ -18,23 +19,49 @@ passport.deserializeUser((id, done)=> {
     });
 });
 
-passport.use(new GoogleStrategy({
-  clientID: keys.googleClientID,
-  clientSecret: keys.googleClientSecret,
-  callbackURL: '/auth/google/callback',
-  proxy: true
-}, (accessToken, refreshToken, profile, done) => {
-  User.findOne({ googleId: profile.id })
-    .then((existingUser) => {
-      if (existingUser) {
-        // already have a record
-        done(null, existingUser);
-      } else {
-        // create a new user
-        new User({ googleId: profile.id })
-          .save()
-          .then(user => done(null, user));
-      }
-    });
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: keys.googleClientID,
+      clientSecret: keys.googleClientSecret,
+      callbackURL: '/auth/google/callback',
+      proxy: true
+    }
+, async (accessToken, refreshToken, profile, done) => {
+  const existingUser = await User.findOne({ googleId: profile.id });
+  console.log(existingUser);
+  if (existingUser) {
+    // already have a record
+    return done(null, existingUser);
+  }
+  
+  // create a new user
+  const user = await new User({ googleId: profile.id }).save();
+  done(null, user);
+   
 }));
+
+passport.use(new FacebookStrategy({
+  clientID: keys.facebookClientID,
+  clientSecret: keys.facebookClientSecret,
+  callbackURL: "/auth/facebook/callback",
+  profileFields: ['id', 'displayName', 'email'],
+  enableProof: true,
+  proxy: true
+},
+async function(accessToken, refreshToken, profile, done) {
+  console.log(profile);
+  
+  const existingUser = await User.findOne({ facebookId: profile.id });
+    
+  if (existingUser) {
+    // already have a record
+    return done(null, existingUser);
+  } 
+  
+  // create a new user
+  const user = await new User({ facebookId: profile.id }).save();
+  done(null, user);
+}
+));
 

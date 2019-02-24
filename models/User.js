@@ -3,7 +3,8 @@ const { Schema } = mongoose;
 
 // define the data types in the collection
 const userSchema = new Schema({
-  googleId: String
+  googleId: String,
+  facebookId: String
 });
 
 // create new collection
