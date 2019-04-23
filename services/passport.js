@@ -26,20 +26,19 @@ passport.use(
       clientSecret: keys.googleClientSecret,
       callbackURL: '/auth/google/callback',
       proxy: true
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      const existingUser = await User.findOne({ googleId: profile.id });
+
+      if (existingUser) {
+        return done(null, existingUser);
+      }
+
+      const user = await new User({ googleId: profile.id }).save();
+      done(null, user);
     }
-, async (accessToken, refreshToken, profile, done) => {
-  const existingUser = await User.findOne({ googleId: profile.id });
-  console.log(existingUser);
-  if (existingUser) {
-    // already have a record
-    return done(null, existingUser);
-  }
-  
-  // create a new user
-  const user = await new User({ googleId: profile.id }).save();
-  done(null, user);
-   
-}));
+  )
+);
 
 passport.use(new FacebookStrategy({
   clientID: keys.facebookClientID,
@@ -50,8 +49,6 @@ passport.use(new FacebookStrategy({
   proxy: true
 },
 async function(accessToken, refreshToken, profile, done) {
-  console.log(profile);
-  
   const existingUser = await User.findOne({ facebookId: profile.id });
     
   if (existingUser) {
