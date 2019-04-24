@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const cookieSession = require('cookie-session');
 const bodyParser = require('body-parser');
 const keys = require('./config/keys');
-console.log(process.env);
+console.log(process.env.GOOGLE_CLIENT_ID);
 const passport = require('passport');
 
 require('./models/User');
