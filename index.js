@@ -1,9 +1,9 @@
-console.log(process.env);
 const express = require('express');
 const mongoose = require('mongoose');
 const cookieSession = require('cookie-session');
 const bodyParser = require('body-parser');
 const keys = require('./config/keys');
+console.log(process.env);
 const passport = require('passport');
 
 require('./models/User');
