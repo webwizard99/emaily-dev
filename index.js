@@ -28,7 +28,7 @@ require('./routes/authRoutes')(app);
 require('./routes/billingRoutes')(app);
 
 if (process.env.NODE_ENV === 'production') {
-  console.log('production ode in index.js on server');
+  console.log('production code in index.js on server');
   // Express will serve up production assets
   // like our main.js file, or main.css file
   app.use(express.static('client/build'));
