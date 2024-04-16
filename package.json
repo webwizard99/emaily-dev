@@ -24,7 +24,7 @@
     "express": "^4.16.4",
     "forever": "^1.0.0",
     "localtunnel": "^1.9.1",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.17",
     "mongoose": "^5.4.5",
     "ngrok": "^3.1.1",
     "nodemon": "^1.18.9",
